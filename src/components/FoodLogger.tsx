@@ -33,6 +33,7 @@ function getMealTypeForTime(): MealType {
 
 export default function FoodLogger({ user, onLogged }: FoodLoggerProps) {
   const [input, setInput] = useState('');
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [mealType, setMealType] = useState<MealType>(getMealTypeForTime());
   const [parsing, setParsing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -108,7 +109,7 @@ export default function FoodLogger({ user, onLogged }: FoodLoggerProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_id: user.id,
-          date: new Date().toISOString().split('T')[0],
+          date,
           meal_type: mealType,
           raw_input: input,
           items: editedItems.map((item) => ({
@@ -179,6 +180,21 @@ export default function FoodLogger({ user, onLogged }: FoodLoggerProps) {
           <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide">
             Log Food
           </h2>
+
+          {/* Date selector */}
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
+              Date
+            </label>
+            <input
+              type="date"
+              value={date}
+              max={new Date().toISOString().split('T')[0]}
+              onChange={(e) => setDate(e.target.value)}
+              disabled={!!parsed}
+              className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm disabled:opacity-50"
+            />
+          </div>
 
           {/* Meal type selector */}
           <div>
